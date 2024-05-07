@@ -5,35 +5,35 @@ on:
     branches: ["main"]
   pull_request:
     branches: ["main"]
-
   workflow_dispatch:
 
 jobs:
   build-job:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code 
+      - name: Checkout código
         uses: actions/checkout@v3
 
-      - name: Login to Dockerfile
+      - name: Login no Docker Hub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build Docker image
-        run: docker build -t wallacelentes/devops:tagname .
+      - name: Construir imagem Docker
+        run: |
+          docker build -t wallacelentes/devops:tagname .
+          docker push wallacelentes/devops:tagname
 
-      - name: Push Docker image
-        run: docker push wallacelentes/devops:tagname
-        
   test-job:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Install dependencies
-        run : pip install Flask
-      - uses: AppThreat/sast-scan-action@master
+      - name: Checkout código
+        uses: actions/checkout@v3
+      - name: Instalar dependências
+        run: pip install Flask
+      - name: Executar análise de segurança
+        uses: AppThreat/sast-scan-action@master
         with:
           type: "python"
 
@@ -41,17 +41,17 @@ jobs:
     runs-on: ubuntu-latest
     needs: test-job
     steps:
-      - name: Checkout code 
+      - name: Checkout código
         uses: actions/checkout@v3
 
-      - name: Login to Dockerfile
+      - name: Login no Docker Hub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Pull Docker image
+      - name: Puxar imagem Docker
         run: docker pull wallacelentes/devops:tagname
 
-      - name: Run Docker image
+      - name: Executar imagem Docker
         run: docker run wallacelentes/devops:tagname
