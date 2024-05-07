@@ -1,0 +1,57 @@
+name: Teste
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+  workflow_dispatch:
+
+jobs:
+  build-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code 
+        uses: actions/checkout@v3
+
+      - name: Login to Dockerfile
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build Docker image
+        run: docker build -t wallacelentes/devops:tagname .
+
+      - name: Push Docker image
+        run: docker push wallacelentes/devops:tagname
+        
+  test-job:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run : pip install Flask
+      - uses: AppThreat/sast-scan-action@master
+        with:
+          type: "python"
+
+  deploy-job:
+    runs-on: ubuntu-latest
+    needs: test-job
+    steps:
+      - name: Checkout code 
+        uses: actions/checkout@v3
+
+      - name: Login to Dockerfile
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Pull Docker image
+        run: docker pull wallacelentes/devops:tagname
+
+      - name: Run Docker image
+        run: docker run wallacelentes/devops:tagname

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+    <link href="CSS/estilo.css" rel="stylesheet">
+    <title>Homepage</title>
+
+</head>
+
+<body>
+    <header>
+
+        <nav class="topnav">
+            <a href="index.html">Início</a>
+            <a href="index.html">Veiculos </a>
+            <a href="index.html">Quem Somos</a>
+            <a href="index.html">Contato</a>
+            <a href="index.html" style="float:right">Cadastrar</a>
+            <a href="index.html" style="float:right">Login</a>
+        </nav>
+    </header>
+
+    <main>
+
+        <div class="header">
+            <h1>Sistema de locação de carros</h1>
+            <h3>Seja muito bem-vindo(a).</h3>
+        </div>
+
+
+        <div class="row">
+            <div class="leftcolumn">
+                <div class="card">
+                    <h2>Digite 'veiculo' no campo abaixo!</h2>
+                    <input type="text" id="texto" placeholder="Digite 'veiculo' aqui">
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.getElementById('texto').addEventListener('input', function () {
+                var textoDigitado = this.value.toLowerCase();
+                if (textoDigitado === 'veiculo') {
+                    alert('Foi digitado: ' + textoDigitado.toUpperCase());
+                }
+            });       
+        </script>
+    </main>
+    <footer>
+
+        <div class="footer">
+            <h2>Devops - PUCPR</h2>
+        </div>
+    </footer>
+
+</body>
+
+</html>
